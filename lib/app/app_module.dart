@@ -4,11 +4,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:studysmma/app/app_controller.dart';
 import 'package:studysmma/app_widget.dart';
 import 'package:studysmma/app/modules/home/home_module.dart';
+import 'package:studysmma/favorite_shared/save.preferences.dart';
 
 class AppModule extends MainModule {
   @override
   List<Bind> get binds => [
-        Bind((i) => SavedController()),
         Bind((i) => AppController()),
       ];
 

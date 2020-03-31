@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FavoriteDao{
+class SaveDao{
 
   final _KEY;
 
-  FavoriteDao(this._KEY);
+  SaveDao(this._KEY);
 
   Future<String> getPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

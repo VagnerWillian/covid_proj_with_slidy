@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:studysmma/app/modules/home/widgets/info.tile.dart';
+import 'package:studysmma/app/modules/saved/saved_controller.dart';
+import 'package:studysmma/delegates/country.delegate.dart';
 import 'package:studysmma/models/country.model.dart';
 import 'home_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
-  const HomePage({Key key, this.title = "Slidy + Modular e Mobx"}) : super(key: key);
+  const HomePage({Key key, this.title = "Actually Situation COVID19 - Corona"}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,8 +20,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends ModularState<HomePage, HomeController> {
   //use 'controller' variable to access controller
   @override
-  // TODO: implement controller
   HomeController get controller => super.controller;
+
+  //use 'controller' variable to access controller
+  @override
+  SavedController get savedController => Modular.get<SavedController>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,37 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       appBar: AppBar(
         backgroundColor: Colors.grey[400],
         elevation: 0,
-        title: Text(widget.title),
+        title: Text(widget.title, style: TextStyle(fontSize: 15),),
+        actions: <Widget>[
+          Container(
+            width: 50,
+            child: RaisedButton(
+              onPressed: () {
+                showSearch(context: context, delegate: CountryDelegate());
+              },
+              child: Icon(
+                Icons.search,
+                color: Colors.grey[800],
+                size: 25,
+              ),
+              elevation: 0,
+              color: Colors.transparent,
+            ),
+          ),
+          Container(
+            width: 60,
+            child: RaisedButton(
+              onPressed: ()=>Modular.to.pushNamed('/saved/'),
+              child: Icon(
+                Icons.save,
+                color: Colors.grey[800],
+                size: 25,
+              ),
+              elevation: 0,
+              color: Colors.transparent,
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Column(
@@ -67,13 +103,17 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 builder: (_) {
                   if(controller.selectCountry != null){
                     CountryModel country = controller.selectCountry;
-                    print(controller.favorites);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Center(
-                          child: Text(country == null ? "Casos em todo o  mundo" : "Situação atual no ${country.country}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                          child: Column(
+                            children: <Widget>[
+                              Text(country == null ? "Casos em todo o  mundo" : "Situação atual no país", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                              Text(country == null ? "" : country.country, style: TextStyle(fontSize: 20),),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20,),
                         Container(
@@ -97,101 +137,18 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text("Casos • ${country.cases}", style: TextStyle(fontWeight: FontWeight.bold),),
-                                    SizedBox(width: 10,),
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.black.withOpacity(0.8),
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text("Casos por dia • ${country.todayCases}", style: TextStyle(fontWeight: FontWeight.bold),),
-                                    SizedBox(width: 10,),
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.black.withOpacity(0.6),
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text("Mortos • ${country.deaths}", style: TextStyle(fontWeight: FontWeight.bold),),
-                                    SizedBox(width: 10,),
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.red.withOpacity(0.6),
-                                        )),
-                                  ],
-                                ),
+                                InfoTile(situation: "Casos", value: country.cases, colors: Colors.grey.withOpacity(0.4), reversed: true,),
+                                InfoTile(situation: "Casos por dia", value: country.todayCases, colors: Colors.black.withOpacity(0.4), reversed: true,),
+                                InfoTile(situation: "Mortos", value: country.deaths, colors: Colors.red.withOpacity(0.6), reversed: true,),
                               ],
                             ),
-                            SizedBox(width: 10,),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.red,
-                                        )),
-                                    SizedBox(width: 10,),
-                                    Text("${country.todayDeaths} • Mortos por dia", style: TextStyle(fontWeight: FontWeight.bold),)
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.yellow[800],
-                                        )),
-                                    SizedBox(width: 10,),
-                                    Text("${country.critical} • Críticos", style: TextStyle(fontWeight: FontWeight.bold),)
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.green,
-                                        )),
-                                    SizedBox(width: 10,),
-                                    Text("${country.recovered} • Curados", style: TextStyle(fontWeight: FontWeight.bold),)
-                                  ],
-                                ),
+                                InfoTile(situation: "Mortos por dia", value: country.todayDeaths, colors: Colors.red),
+                                InfoTile(situation: "Críticos", value: country.critical, colors: Colors.yellow[800]),
+                                InfoTile(situation: "Curados", value: country.recovered, colors: Colors.green),
                               ],
                             ),
                           ],
@@ -201,13 +158,15 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             GestureDetector(
-                              onTap: ()=>controller.setFavorite(country: controller.selectCountry),
-                              onLongPress: ()=>controller.clearFavorites(),
+                              onTap: ()=>savedController.setFavorite(country: controller.selectCountry),
+                              onLongPress: ()=>savedController.clearFavorites(),
                               child: Container(
-                                child: controller.favorites.where((c)=>c.country == country.country).length > 0 ? Icon(Icons.star, color: Colors.yellow[800], size: 50,) : Icon(Icons.star_border, color: Colors.yellow[800], size: 50,),
+                                child: savedController.favorites.where((c)=>c.country == country.country).length > 0 ?
+                                Icon(Icons.save, color: Colors.yellow[800], size: 35,) :
+                                Icon(Icons.save, color: Colors.grey[800], size: 35,),
                               ),
                             ),
-                            Text("Salvar país")
+                            Text("Salvar país", style: TextStyle(fontWeight: FontWeight.bold),)
                           ],
                         ),
                       ],
