@@ -1,1 +1,0 @@
-final String URL_API = "https://coronavirus-19-api.herokuapp.com";

@@ -1,38 +1,40 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:studysmma/models/country.model.dart';
-import 'package:studysmma/repository/webservice.dart';
+import 'package:studysmma/app/constraints.dart';
 
 class CoronaRepository{
-  Dio dio;
 
+  Dio dio;
   CoronaRepository(this.dio);
 
-  Future<CountryModel> selectCountry({String country}) async{
-    var request = await dio.get(country == null ? "$URL_API/all" : "$URL_API/countries/$country");
-    if(request.statusCode == 200){
-      var dataJson = request.data;
-      return CountryModel.fromJson(dataJson);
-    }
+  List<CountryModel> _countries = [];
+
+  CountryModel selectCountry({String country}){
+    return country == null ? _countries[0] : _countries.where((c) => c.country == country).first;
   }
 
   Future<List<CountryModel>> fetchAllCountries() async {
       var request = await dio.get("$URL_API/countries/");
       if(request.statusCode == 200){
         var dataJson = request.data;
-
         return getAllCountries(dataJson);
+      }else{
+        print("Erro");
       }
   }
 
   getAllCountries(dataJson) {
-      List<CountryModel> _countries = [];
-
     for(Map country in dataJson){
       _countries.add(CountryModel.fromJson(country));
     }
     return _countries;
   }
+
+/*  fetchGlobalCases() async {
+    var request = await dio.get("$URL_API/all");
+    if(request.statusCode == 200){
+      var dataJson = request.data;
+      return CountryModel.fromJson(dataJson);
+    }
+  }*/
 }

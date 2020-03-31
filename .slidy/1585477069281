@@ -1,0 +1,4 @@
+lib/app/favorite_page/favorite_page_page.dart
+test/app/favorite_page/favorite_page_page_test.dart
+lib/app/favorite_page/favorite_page_controller.dart
+test/app/favorite_page/favorite_page_controller_test.dart

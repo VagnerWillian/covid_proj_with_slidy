@@ -29,25 +29,42 @@ mixin _$HomeController on _HomeControllerBase, Store {
   final _$selectCountryAtom = Atom(name: '_HomeControllerBase.selectCountry');
 
   @override
-  ObservableFuture<dynamic> get selectCountry {
+  CountryModel get selectCountry {
     _$selectCountryAtom.context.enforceReadPolicy(_$selectCountryAtom);
     _$selectCountryAtom.reportObserved();
     return super.selectCountry;
   }
 
   @override
-  set selectCountry(ObservableFuture<dynamic> value) {
+  set selectCountry(CountryModel value) {
     _$selectCountryAtom.context.conditionallyRunInAction(() {
       super.selectCountry = value;
       _$selectCountryAtom.reportChanged();
     }, _$selectCountryAtom, name: '${_$selectCountryAtom.name}_set');
   }
 
+  final _$favoritesAtom = Atom(name: '_HomeControllerBase.favorites');
+
+  @override
+  List<CountryModel> get favorites {
+    _$favoritesAtom.context.enforceReadPolicy(_$favoritesAtom);
+    _$favoritesAtom.reportObserved();
+    return super.favorites;
+  }
+
+  @override
+  set favorites(List<CountryModel> value) {
+    _$favoritesAtom.context.conditionallyRunInAction(() {
+      super.favorites = value;
+      _$favoritesAtom.reportChanged();
+    }, _$favoritesAtom, name: '${_$favoritesAtom.name}_set');
+  }
+
   final _$_HomeControllerBaseActionController =
       ActionController(name: '_HomeControllerBase');
 
   @override
-  CountryModel getCountry({@required String country}) {
+  dynamic getCountry({String country}) {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
     try {
       return super.getCountry(country: country);
@@ -57,9 +74,39 @@ mixin _$HomeController on _HomeControllerBase, Store {
   }
 
   @override
+  dynamic setFavorite({@required CountryModel country}) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
+    try {
+      return super.setFavorite(country: country);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic getFavorites() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
+    try {
+      return super.getFavorites();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic clearFavorites() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
+    try {
+      return super.clearFavorites();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     final string =
-        'countries: ${countries.toString()},selectCountry: ${selectCountry.toString()}';
+        'countries: ${countries.toString()},selectCountry: ${selectCountry.toString()},favorites: ${favorites.toString()}';
     return '{$string}';
   }
 }
